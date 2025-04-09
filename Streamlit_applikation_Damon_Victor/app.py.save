@@ -1,0 +1,79 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 import streamlit as st\
+import numpy as np\
+import cv2\
+from tensorflow import keras\
+from PIL import Image\
+\
+# Ladda den sparade modellen\
+model = keras.models.load_model("mnist_model.keras")\
+\
+# Skapa appens titel\
+st.title("\uc0\u55357 \u56610  RITA EN SIFFRA OCH L\'c5T AI GISSA! \u55357 \u56610 ")\
+\
+st.write("\uc0\u55357 \u56716 \u65039  Ladda upp en bild p\'e5 en siffra (0-9) s\'e5 gissar AI vilken det \'e4r!")\
+\
+# Ladda upp en bild fr\'e5n anv\'e4ndaren\
+uploaded_file = st.file_uploader("Ladda upp en bild", type=["png", "jpg", "jpeg"])\
+\
+if uploaded_file is not None:\
+    # \'d6ppna bilden och visa den\
+streamlit run app.py
+
+    image = Image.open(uploaded_file).convert("L")  # G\'f6r bilden svartvit\
+    st.image(image, caption="Din uppladdade siffra", use_column_width=True)\
+\
+    # F\'f6rbehandla bilden s\'e5 den matchar modellen\
+    image = image.resize((28, 28))  # \'c4ndra storlek till 28x28 pixlar\
+    image = np.array(image)  # G\'f6r om till en array\
+    image = image / 255.0  # Normalisera (g\'f6r alla v\'e4rden mellan 0 och 1)\
+    image = image.reshape(1, 28, 28, 1)  # G\'f6r den redo f\'f6r modellen\
+\
+    # AI gissar siffran\
+    prediction = model.predict(image)\
+    predicted_digit = np.argmax(prediction)\
+\
+    # Visa resultatet\
+    st.write(f"\uc0\u55358 \u56598  AI tror att siffran \'e4r: **\{predicted_digit\}**")\
+}
+import streamlit as st
+import numpy as np
+import cv2
+from tensorflow import keras
+from PIL import Image
+
+# Ladda den sparade modellen
+model = keras.models.load_model("mnist_model.keras")
+
+# Skapa appens titel
+st.title("🔢 RITA EN SIFFRA OCH LÅT AI GISSA! 🔢")
+
+st.write("🖌️ Ladda upp en bild på en siffra (0-9) så gissar AI vilken det är!")
+
+# Ladda upp en bild från användaren
+uploaded_file = st.file_uploader("Ladda upp en bild", type=["png", "jpg", "jpeg"])
+
+if uploaded_file is not None:
+    # Öppna bilden och visa den
+    image = Image.open(uploaded_file).convert("L")  # Gör bilden svartvit
+    st.image(image, caption="Din uppladdade siffra", use_column_width=True)
+
+    # Förbehandla bilden så den matchar modellen
+    image = image.resize((28, 28))  # Ändra storlek till 28x28 pixlar
+    image = np.array(image)  # Gör om till en array
+    image = image / 255.0  # Normalisera (gör alla värden mellan 0 och 1)
+    image = image.reshape(1, 28, 28, 1)  # Gör den redo för modellen
+
+    # AI gissar siffran
+    prediction = model.predict(image)
+    predicted_digit = np.argmax(prediction)
+
+    # Visa resultatet
+    st.write(f"🤖 AI tror att siffran är: **{predicted_digit}**")
+
